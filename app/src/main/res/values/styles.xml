@@ -1,0 +1,8 @@
+<resources>
+    <!-- Spinner özel stili -->
+    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:popupBackground">@android:color/white</item>
+        <item name="android:dropDownVerticalOffset">8dp</item>
+    </style>
+</resources> 

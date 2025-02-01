@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="6dp"
+    android:backgroundTint="#FFFFFF"
+    android:background="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Üst Bilgiler: Ülke ve Vize Türü -->
+        <TextView
+            android:id="@+id/tvVisaCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Short Term Visa"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tvCountries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Türkiye ➝ Slovenya"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Ayırıcı Çizgi -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginVertical="8dp"/>
+
+        <!-- Randevu ve Başvuru Merkezi -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_calendar"
+                app:tint="@android:color/holo_red_dark" />
+
+            <TextView
+                android:id="@+id/tvAppointmentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Randevu: 02/02/2025"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/baseline_location_pin_24"
+                app:tint="@android:color/holo_blue_dark" />
+
+            <TextView
+                android:id="@+id/tvCenterName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slovenia Visa Center, Antalya"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- Başvuru Butonu -->
+        <Button
+            android:id="@+id/btnBookNow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Başvuru Yap"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp"
+            android:paddingVertical="8dp"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
