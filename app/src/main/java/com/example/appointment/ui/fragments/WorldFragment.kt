@@ -15,22 +15,31 @@ import com.example.appointment.ui.adapders.VisaAdapter
 import com.example.appointment.ui.viewmodels.WorldViewModel
 import com.example.appointment.util.Resource
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class WorldFragment : Fragment() {
 
-    private lateinit var binding: FragmentWorldBinding
+    private var _binding: FragmentWorldBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: WorldViewModel by viewModels()
     private var visaAdapter: VisaAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding =FragmentWorldBinding.inflate(inflater, container, false)
+    ): View {
+        _binding = FragmentWorldBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        visaAdapter = null
+        // RecyclerView'ı temizle
+        binding.recyclerView.adapter = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,36 +49,21 @@ class WorldFragment : Fragment() {
         setupSwipeRefresh()
         setupSearchButton()
         observeData()
+        observeCountries()
     }
 
     private fun setupSpinners() {
-        // Ülke listelerini oluştur
-
-        val originCountries = listOf("All", "Turkiye","France","India","Slovenia", "Finland", "Croatia",  "Germany", "Estonia", "Netherlands", "Czechia", "Brazil", "Austria", "Switzerland", "Norway", "Luxembourg",
-            "Hungary", "Italy", "Lithuania", "Sweden", "Denmark", "Portugal", "Ireland", "Latvia", "Lithuania TRP and National Visa", "New Zealand", "Greece")
-        val destinationCountries = listOf("All", "Turkiye","France","India","Slovenia", "Finland", "Croatia",  "Germany", "Estonia", "Netherlands", "Czechia", "Brazil", "Austria", "Switzerland", "Norway", "Luxembourg",
-            "Hungary", "Italy", "Lithuania", "Sweden", "Denmark", "Portugal", "Ireland", "Latvia", "Lithuania TRP and National Visa", "New Zealand", "Greece")
-
-        // Spinner adaptörlerini oluştur
-        val destinationAdapter = ArrayAdapter(
+        // Boş adaptörleri oluştur
+        val emptyAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            destinationCountries
+            listOf("Loading...")
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
-        val originAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            originCountries
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-
-        // Spinner'ları ayarla
-        binding.spinnerDestination.adapter = destinationAdapter
-        binding.spinnerOrigin.adapter = originAdapter
+        binding.spinnerDestination.adapter = emptyAdapter
+        binding.spinnerOrigin.adapter = emptyAdapter
     }
 
     private fun setupSearchButton() {
@@ -88,20 +82,12 @@ class WorldFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
+            setHasFixedSize(true) // Performans iyileştirmesi
             visaAdapter = VisaAdapter()
             adapter = visaAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (!recyclerView.canScrollVertically(1) && 
-                        !viewModel.isLastPage && 
-                        !viewModel.isRefreshing) {
-                        viewModel.loadMoreWorld()
-                    }
-                }
-            })
+            // İsteğe bağlı RecyclerView önbellekleme
+            recycledViewPool.setMaxRecycledViews(0, 20)
         }
     }
 
@@ -118,40 +104,58 @@ class WorldFragment : Fragment() {
                 is Resource.Success -> {
                     binding.swipeRefreshLayout.isRefreshing = false
                     hideProgressBar()
-                    hidePaginationProgressBar()
                     
                     resource.data?.let { visaList ->
                         if (visaList.isEmpty()) {
                             showEmptyState()
                         } else {
                             hideEmptyState()
-                            if (viewModel.currentPage == 1) {
-                                // İlk sayfa için listeyi tamamen değiştir
-                                visaAdapter?.differ?.submitList(visaList)
-                            } else {
-                                // Sonraki sayfalar için mevcut listeye ekle
-                                visaAdapter?.differ?.submitList(
-                                    visaAdapter?.differ?.currentList?.plus(visaList)
-                                )
-                            }
+                            visaAdapter?.differ?.submitList(visaList)
                         }
                     }
                 }
                 is Resource.Error -> {
                     binding.swipeRefreshLayout.isRefreshing = false
                     hideProgressBar()
-                    hidePaginationProgressBar()
                     showEmptyState()
                 }
                 is Resource.Loading -> {
-                    if (!viewModel.isPagination) {
-                        showProgressBar()
-                    } else {
-                        showPaginationProgressBar()
-                    }
+                    showProgressBar()
                 }
             }
         }
+    }
+
+    private fun observeCountries() {
+        viewModel.countries.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    resource.data?.let { countries ->
+                        updateSpinners(countries.toList())
+                    }
+                }
+                is Resource.Error -> {
+                    // Hata durumunda kullanıcıya bilgi ver
+                    Toast.makeText(context, "Ülke listesi yüklenemedi", Toast.LENGTH_SHORT).show()
+                }
+                is Resource.Loading -> {
+                    // İsteğe bağlı loading gösterilebilir
+                }
+            }
+        }
+    }
+
+    private fun updateSpinners(countries: List<String>) {
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            countries
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.spinnerDestination.adapter = adapter
+        binding.spinnerOrigin.adapter = adapter
     }
 
     private fun showEmptyState() {
