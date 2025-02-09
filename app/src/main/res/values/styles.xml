@@ -5,4 +5,11 @@
         <item name="android:popupBackground">@android:color/white</item>
         <item name="android:dropDownVerticalOffset">8dp</item>
     </style>
+
+    <!-- Bottom Navigation özel stili -->
+    <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@null</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+    </style>
 </resources> 

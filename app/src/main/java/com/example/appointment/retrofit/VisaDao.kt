@@ -14,4 +14,8 @@ interface VisaDao {
     ) : Response<List<Visa>>
 
 
+    @GET("/world")
+    suspend fun world() : Response<List<Visa>>
+
+
 }

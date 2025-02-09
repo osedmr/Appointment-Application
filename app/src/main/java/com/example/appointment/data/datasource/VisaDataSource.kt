@@ -9,7 +9,10 @@ class VisaDataSource @Inject constructor(var vdao: VisaDao)  {
 
     suspend fun getVisa(missionCountry:String) = withContext(Dispatchers.IO){
         vdao.visa(missionCountry)
+    }
 
+    suspend fun getWorld() = withContext(Dispatchers.IO){
+        vdao.world()
     }
 
 

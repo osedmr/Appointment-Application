@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/visaFragment"
+        android:title="Turkey"
+        android:icon="@drawable/tr"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/worldFragment"
+        android:title="World"
+        android:icon="@drawable/world"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/notificationFragment"
+        android:icon="@drawable/notification"
+        android:title="Notification"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/profile"
+        android:title="Profile"
+        app:showAsAction="ifRoom"/>
+</menu>

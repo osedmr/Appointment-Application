@@ -7,4 +7,5 @@ class VisaRepository @Inject constructor(var vds: VisaDataSource) {
 
     suspend fun getVisa(missionCountry:String) =vds.getVisa(missionCountry)
 
+    suspend fun getWorld() =vds.getWorld()
 }

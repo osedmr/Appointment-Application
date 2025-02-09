@@ -10,4 +10,9 @@
         android:name="com.example.appointment.ui.fragments.VisaFragment"
         android:label="fragment_visa"
         tools:layout="@layout/fragment_visa" />
+    <fragment
+        android:id="@+id/worldFragment"
+        android:name="com.example.appointment.ui.fragments.WorldFragment"
+        android:label="fragment_world"
+        tools:layout="@layout/fragment_world" />
 </navigation>
